@@ -6,14 +6,14 @@ func getConcatenation(nums []int) []int {
 	return append(nums, nums...)
 }
 
-func betterSolution(nums []int) []int {
-	l := len(nums)
-	res := make([]int, l*2)
-	for i := range l {
-		res[i] = nums[i]
-		res[l+i] = nums[i]
+func betterSolution(nums []int) []int { //betterSolution according to neet150
+	n := len(nums)
+	ans := make([]int, 2*n)
+	for i := range n {
+		ans[i] = nums[i]
+		ans[i+n] = nums[i]
 	}
-	return res
+	return ans
 }
 
 func main() {

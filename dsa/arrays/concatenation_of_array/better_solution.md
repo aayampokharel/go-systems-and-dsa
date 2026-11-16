@@ -33,7 +33,10 @@ Go allocates a new underlying array.
 
 ---
 
-### Better Solution: 
+### Better Solution: (based on benchmark)
+
+![alt text](image.png)
+
 ```go
 func getConcatenation(nums []int) []int {
     n := len(nums)
@@ -45,7 +48,8 @@ func getConcatenation(nums []int) []int {
     return ans
 }
 ```
-It's runtime is only 1ms , whereas my runtime is about 2ms. 
+the benchmark above shows how the bettersolution is only slightly slower for 1000 elements than my solution, but beats append in other 3 sizes of 10,100,10k sizes. 
+
 
 ---
 
