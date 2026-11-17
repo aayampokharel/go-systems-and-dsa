@@ -1,0 +1,1 @@
+Memory: The struct{} version uses slightly less memory per map entry because an empty struct takes up 0 bytes, whereas an int takes 8 bytes. For massive slices, that minor difference adds up, but for day-to-day coding, the difference is negligible.
