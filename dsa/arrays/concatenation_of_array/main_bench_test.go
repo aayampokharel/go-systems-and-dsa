@@ -18,7 +18,6 @@ func BenchmarkGetConcatenation(b *testing.B) {
 
 		b.Run(fmt.Sprintf("size of:%v", val), func(b *testing.B) {
 			nums := generateSlice(val)
-			b.ResetTimer()
 			for b.Loop() {
 				_ = getConcatenation(nums)
 			}
@@ -33,7 +32,6 @@ func BenchmarkBetterSolution(b *testing.B) {
 
 		b.Run(fmt.Sprintf("size of:%v", val), func(b *testing.B) {
 			nums := generateSlice(val)
-			b.ResetTimer()
 			for b.Loop() {
 				_ = betterSolution(nums)
 			}
