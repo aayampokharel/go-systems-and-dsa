@@ -1,0 +1,2 @@
+- for testing using benchmark i need to have prefix of the function starting with `Benchmark` exactly. 
+- with modern `b.Loop()`, `resetTimer()` method is redundant,Go's modern `b.Loop()` syntax (introduced in Go 1.24), the framework automatically isolates and measures only the code inside the loop.
