@@ -6,3 +6,5 @@
 - It also preallocates the result slice with `make([][]string, 0, len(m))`.
 
 Overall: **O(n·m)** instead of **O(n·m log m)**. The trade-off is that it only works for lowercase `a-z`, which is exactly what the problem guarantees.
+
+![alt text](image.png)

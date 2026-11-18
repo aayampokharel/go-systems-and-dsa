@@ -6,3 +6,5 @@
 - It avoids sorting the frequencies (**O(d log d)**) and avoids mutating/deleting from the map while searching.
 
 Overall: **O(n)** instead of **O(k·d)** / **O(n²)**.
+
+![alt text](image.png)
