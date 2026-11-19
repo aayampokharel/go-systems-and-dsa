@@ -1,0 +1,1 @@
+I found another cleane solution but with same time complexity.
