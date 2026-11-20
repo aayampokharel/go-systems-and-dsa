@@ -1,15 +1,7 @@
 package main
 
 func longestConsecutive(nums []int) int {
-	// nums:=slices.sort(nums)
-	// var tempSlice []int
-	// var returnSlice []int
-	//
-	//	for i:=0;i<len(nums)-1;i++{
-	//		if nums[i]+1==nums[i+1]{
-	//	       tempSlice=append(tempSlice,nums[i])
-	//		}
-	//	}
+
 	if len(nums) == 0 {
 		return 0
 	}
@@ -20,10 +12,10 @@ func longestConsecutive(nums []int) int {
 		mNums[val]++
 	}
 
-	for _, val := range nums { //n
-		if _, ok := mNums[val-1]; !ok {  //n
+	for _, val := range nums { //203
+		if _, ok := mNums[val-1]; !ok { //4(1,300,400,500)
 
-			for i := 0; i < len(nums); i++ {
+			for i := 0; i < len(nums); i++ { //200
 				if _, ok2 := mNums[val+i+1]; ok2 {
 					tempCount++
 				} else {
@@ -39,4 +31,37 @@ func longestConsecutive(nums []int) int {
 	}
 	return count
 
+}
+
+func BestSolution(nums []int) int {
+	numSet := make(map[int]struct{}, len(nums))
+
+	for _, num := range nums {
+		numSet[num] = struct{}{}
+	}
+
+	longest := 0
+
+	for num := range numSet {
+		// Only start counting from the beginning of a sequence.
+		if _, exists := numSet[num-1]; !exists {
+			current := num
+			count := 1
+
+			for {
+				if _, exists := numSet[current+1]; !exists {
+					break
+				}
+
+				current++
+				count++
+			}
+
+			if count > longest {
+				longest = count
+			}
+		}
+	}
+
+	return longest
 }
