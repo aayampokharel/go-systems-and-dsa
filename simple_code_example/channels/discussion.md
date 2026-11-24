@@ -69,3 +69,52 @@ func main() {
 
 
 ---
+
+# Race condition: 
+
+```go
+
+func sendInCh(wg *sync.WaitGroup, ch chan<- int, val int) {
+	defer wg.Done()
+	ch <- val
+}
+
+func closeChannel(wg *sync.WaitGroup, ch chan int) {
+	wg.Wait()
+	close(ch)
+
+}
+func main() {
+	var ch chan int = make(chan int)
+	var wg sync.WaitGroup = sync.WaitGroup{}
+	go func() {
+		for channelVal := range ch {
+			fmt.Println(channelVal)
+		}
+	}()
+
+	for key := range 100 {
+		if key%2 == 0 {
+			wg.Add(1)
+			go sendInCh(&wg, ch, key)
+			wg.Wait()
+		}
+
+	}
+	go closeChannel(&wg, ch)
+
+	fmt.Println("thankyou")
+}
+```
+here, above 98 sometimes prints sometimes it doesnot. 
+>[!alert] becz: at anytime, because of `wg.Wait()` only 1 sender's goroutine is active.Total:main+1 sender+1 of for---range, total 3 goroutines. 
+
+Handshake on ch <- 98: The sender goroutine sends 98, and the receiver goroutine accepts 98 into channelVal inside for channelVal := range ch.
+
+Scheduler interleaving: Right after channelVal receives 98—before the receiver goroutine actually executes fmt.Println(98)—the Go scheduler can switch execution back to the sender or main.
+
+wg.Done() unblocks wg.Wait(): The sender finishes ch <- 98 and runs defer wg.Done(), releasing wg.Wait() inside the loop.
+
+Loop finishes and main exits: key finishes 99, go closeChannel(&wg, ch) is launched, and main reaches fmt.Println("thankyou") and returns.
+
+Process ends mid-print: Returning from main tears down the whole Go process immediately, so the receiver goroutine may never get scheduled to finish fmt.Println(98) (or flush stdout).

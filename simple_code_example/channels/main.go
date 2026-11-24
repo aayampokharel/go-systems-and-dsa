@@ -2,25 +2,37 @@ package main
 
 import (
 	"fmt"
-	"runtime"
-	"time"
+	"sync"
 )
 
-func fastAPI(ch chan<- int) {
-	time.Sleep(time.Millisecond * 1)
-	ch <- 1
+func sendInCh(wg *sync.WaitGroup, ch chan<- int, val int) {
+	defer wg.Done()
+	ch <- val
 }
-func slowAPI(ch chan<- int) {
-	time.Sleep(time.Millisecond * 100)
-	ch <- 100
+
+func closeChannel(wg *sync.WaitGroup, ch chan int) {
+	wg.Wait()
+	close(ch)
+
 }
 func main() {
 	var ch chan int = make(chan int)
-	for range 100 {
+	var wg sync.WaitGroup = sync.WaitGroup{}
+	go func() {
+		for channelVal := range ch {
+			fmt.Println(channelVal)
+		}
+	}()
 
-		go fastAPI(ch)
-		go slowAPI(ch)
-		fmt.Println(<-ch, "no. of go routines", runtime.NumGoroutine())
+	for key := range 100 {
+		if key%2 == 0 {
+			wg.Add(1)
+			go sendInCh(&wg, ch, key)
+			wg.Wait()
+		}
+
 	}
+	go closeChannel(&wg, ch)
 
+	fmt.Println("thankyou")
 }
